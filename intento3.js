@@ -1,24 +1,31 @@
 const POKEMON_CONTAINER = document.querySelector(".pokemon-container");
 
-
-function fetchPokemon(id){
-    fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`)
-    .then(res => res.json())
-    
-    .then(data => {
-        createPokemon(data);
-    });
+function savePokemon(pokemon) {
+    const existingPokemon = JSON.parse(localStorage.getItem("pokemon")) || [];
+    existingPokemon.push(pokemon);
+    localStorage.setItem("pokemon", JSON.stringify(existingPokemon));
 }
 
-fetchPokemon(1);
+
+function fetchPokemon(id) {
+    fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`)
+        .then(res => res.json())
+
+        .then(data => {
+            createPokemon(data);
+            savePokemon(data); // Llamar a la función para guardar en localStorage
+        });
+}
+
+
 
 function fetchPokemons(number) {
-    for (let i=1; i<= number; i++) {
+    for (let i = 1; i <= number; i++) {
         fetchPokemon(i);
     }
 }
 
-fetchPokemons(9);
+//fetchPokemons(9);
 
 function createPokemon(pokemon) {
     const card = document.createElement("div");
@@ -46,4 +53,4 @@ function createPokemon(pokemon) {
 
 }
 
-fetchPokemons();
+fetchPokemons(9);
